@@ -108,6 +108,8 @@ class TypedPassage(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     last_updated = models.DateTimeField(auto_now=True)
 
+    def __str__(self):
+        return self.passage.title
 class Result(models.Model):
 
     passage = models.ForeignKey(Passage, on_delete=models.CASCADE)

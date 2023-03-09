@@ -56,6 +56,7 @@ class EnrollmentAdmin(admin.ModelAdmin):
 
 @admin.register(models.Payment)
 class PaymentAdmin(admin.ModelAdmin):
+    autocomplete_fields = ('student',)
     list_display = ('student', 'subscription', 'amount', 'payment_date')
     list_per_page = 10
     list_filter = ('subscription',)
@@ -68,11 +69,11 @@ class PassageAdmin(admin.ModelAdmin):
     search_fields = ('title',)
     list_per_page = 10
     list_filter = ('created_at',)
-    ordering = ('created_at',)
+    ordering = ('-created_at',)
 
 @admin.register(models.TypedPassage)
 class TypedPassageAdmin(admin.ModelAdmin):
-    pass
+    list_filter = ('created_at',)
 
 
 class StudentFilter(admin.SimpleListFilter):
@@ -92,7 +93,7 @@ class StudentFilter(admin.SimpleListFilter):
 class ResultAdmin(admin.ModelAdmin):
     list_display = ('student', 'passage', 'subexam', 'test_date')
     list_per_page = 10
-    list_filter = ('subexam', StudentFilter)
+    list_filter = ('test_date',)
     ordering = ('-test_date',)
 
 
