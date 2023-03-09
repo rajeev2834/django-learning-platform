@@ -17,6 +17,9 @@ class Student(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    def __str__(self):
+        return self.user.first_name + " " + self.user.last_name
+
 class Subscription(models.Model):
 
     subscription_type_choices = [
@@ -32,6 +35,9 @@ class Subscription(models.Model):
     subscription_type = models.CharField(max_length=255, choices=subscription_type_choices)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.title
     
     def get_duration(self):
         duration_choices = {
@@ -42,7 +48,7 @@ class Subscription(models.Model):
             'Yearly': 365,
             # Add more duration choices as needed
         }
-        return duration_choices.get()
+        return duration_choices.get(self.subscription_type)
 
 class Enrollment(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
@@ -54,7 +60,10 @@ class Enrollment(models.Model):
         if not self.id:
             self.expiration_date = self.get_expiration_date()
         super(Enrollment, self).save(*args, **kwargs)
-  
+
+        if self.expiration_date and self.expiration_date > timezone.now().date():
+            Student.objects.filter(id=self.student.id).update(is_subscribed=True)
+
     def get_expiration_date(self):
         duration = self.subscription.get_duration()
         expiration_date = self.enrollment_date + timezone.timedelta(days=duration)

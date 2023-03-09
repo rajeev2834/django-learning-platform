@@ -8,6 +8,9 @@ class Exam(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    def __str__(self):
+        return self.title
+
 class SubExam(models.Model):
     exam = models.ForeignKey(Exam, on_delete=models.CASCADE)
     title = models.CharField(max_length=255)
@@ -15,3 +18,6 @@ class SubExam(models.Model):
     description = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.title

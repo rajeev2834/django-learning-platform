@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.conf import settings
-from django.db.models import Count
+from django.db.models import Count, F
 from . import models
 
 # Register your models here.
@@ -8,11 +8,11 @@ from . import models
 @admin.register(models.Student)
 class StudentAdmin(admin.ModelAdmin):
     autocomplete_fields = ('user',)
-    list_display = ('first_name', 'last_name', 'user_email', 'phone_number')
+    exclude = ('is_subscribed',)
+    list_display = ('first_name', 'last_name', 'user_email','is_subscribed',)
     search_fields = ('user__first_name', 'user__last_name', 'user__email', 'phone_number')
-    list_per_page = 10
-    list_editable = ('phone_number',)
     list_filter = ('is_subscribed',)
+    list_per_page = 10
     list_select_related = ('user',)
     ordering = ('user__first_name', 'user__last_name')
 
@@ -24,6 +24,13 @@ class StudentAdmin(admin.ModelAdmin):
     
     def user_email(self, obj):
         return obj.user.email
+    
+    
+    def phone_number(self, student):
+        return student.user.phone_number
+    
+    def is_subscribed(self, student):
+        return student.user.is_subscribed
     
 @admin.register(models.Subscription)
 class SubscriptionAdmin(admin.ModelAdmin):
